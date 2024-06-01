@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DatabaseMigrationSettings" liquibaseFileType="SQL">
+    <database-infos>
+      <database-info>
+        <option name="enabled" value="true" />
+        <dbms-id>mysql</dbms-id>
+      </database-info>
+    </database-infos>
+  </component>
+  <component name="PersistenceUnitSettings">
+    <persistence-units>
+      <persistence-unit name="Default">
+        <entities>
+          <entity value="Models.Client" />
+          <entity value="Models.Child" />
+          <entity value="Models.Insurance" />
+          <entity value="Models.Student" />
+          <entity value="Models.Appointment" />
+          <entity value="Models.Doctor" />
+          <entity value="Models.Treatment" />
+          <entity value="Models.Senior" />
+        </entities>
+      </persistence-unit>
+    </persistence-units>
+  </component>
+</project>
