@@ -360,7 +360,6 @@ public class DbService {
 
 
 
-
     public List<Client> getAllClients(Connection connection) {
         List<Client> clients = new ArrayList<>();
 
