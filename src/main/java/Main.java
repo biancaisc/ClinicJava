@@ -1,9 +1,6 @@
 import Models.Appointment;
 import Models.Doctor;
 import Models.Client;
-import Models.Child;
-import Models.Student;
-import Models.Senior;
 import Models.Insurance;
 import Services.DbService;
 
@@ -15,11 +12,11 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Main {
-    //Test
+
     public static void main(String[] args) {
 
         DbFunctions db = new DbFunctions();
-        Connection connection = db.connect_to_db("clinicdb", "root", "root"); // Use java.sql.Connection
+        Connection connection = db.connect_to_db("clinicdb", "root", "root");
 
 //        ClientService clientService = new ClientService();
 //        DoctorService doctorService = new DoctorService();
@@ -31,7 +28,7 @@ public class Main {
 
         Scanner scanner = new Scanner(System.in);
         while (true) {
-            System.out.println("Choose an operation:");
+            System.out.println("\nChoose an operation:");
             System.out.println("1. Add Client");
             System.out.println("2. Add Appointment ");
             System.out.println("3. View Appointments for Client");
@@ -44,7 +41,7 @@ public class Main {
             System.out.println("10. View All Doctors");
             System.out.println("11. Edit Doctor");
             System.out.println("12. Remove a Doctor");
-            System.out.println("13. Exit");
+            System.out.println("13. Exit\n");
             System.out.print("Enter your choice: ");
             int choice = scanner.nextInt();
             scanner.nextLine();
@@ -57,8 +54,22 @@ public class Main {
                     String name = scanner.nextLine();
 
                     System.out.print("Age: ");
-                    int age = scanner.nextInt();
-                    scanner.nextLine();
+                    int age;
+                    while(true){
+                        if(scanner.hasNextInt()){
+                            age = scanner.nextInt();
+                            scanner.nextLine();
+                            break;
+                        }
+                        else{
+                            System.out.println("Invalid input. Please provide a valid age.");
+                            scanner.nextLine();
+                        }
+
+                    }
+
+                    System.out.print("Enter client's category( child/student/adult/senior ): ");
+                    String category = scanner.nextLine();
 
                     System.out.print("Phone number: ");
                     String phoneNumber = scanner.nextLine();
@@ -77,44 +88,14 @@ public class Main {
                         String expDate = scanner.nextLine();
 
                         Insurance insurance = new Insurance(insuranceType, expDate);
-                        Client client = new Client(name, age, phoneNumber, insurance);
+                        Client client = new Client(name, age, category, phoneNumber, insurance);
                         dbService.addClientToDatabase(connection, client);
                         //appointmentService.addClient(client);
-
-                        if(age < 18){
-
-                            Child child = new Child(name, age, phoneNumber, insurance);
-                            //clientService.addChild(connection,child);
-
-                        } else if (age >= 18 && age <= 26) {
-
-                            Student student = new Student(name, age, phoneNumber, insurance);
-                            //clientService.addStudent(student);
-
-                        } else if (age >= 60) {
-                            Senior senior = new Senior(name, age, phoneNumber, insurance);
-                            //clientService.addSenior(senior);
-
-                        }
-
-
                     }
                     else{
-                        Client client = new Client(name, age, phoneNumber, null);
+                        Client client = new Client(name, age, category, phoneNumber, null);
                         dbService.addClientToDatabase(connection, client);
                         //appointmentService.addClient(client);
-
-                        if(age < 18){
-                            Child child = new Child(name, age, phoneNumber, null);
-                            //clientService.addChild(child);
-                        } else if (age >= 18 && age <= 26) {
-                            Student student = new Student(name, age, phoneNumber, null);
-                            //clientService.addStudent(student);
-                        } else if (age >= 60) {
-                            Senior senior = new Senior(name, age, phoneNumber, null);
-                            //clientService.addSenior(senior);
-
-                        }
                     }
                     System.out.println("Client added.");
                     break;
@@ -139,7 +120,7 @@ public class Main {
 
                     break;
                 case 3:
-                    // View appointments for client
+                    // view appointments for client
                     System.out.print("Enter client name: ");
                     String clientName = scanner.nextLine();
                     List<Appointment> clientAppointments = dbService.getAppointmentsForClientByName(connection, clientName);
@@ -250,34 +231,7 @@ public class Main {
                     //appointmentService.removeDoctor(removeDocName);
                     dbService.removeDoc(connection, removeDocName);
                     break;
-//                case 11:
-//                    List<Child> children = dbService.getAllChildren();
-//                    if(children.isEmpty())
-//                        System.out.println("No children found.");
-//                    else {
-//                        for (Child child : children)
-//                            System.out.println(child);
-//                    }
-//                    break;
-//                case 12:
-//                    List<Student> students = dbService.getAllStudents();
-//                    if(students.isEmpty())
-//                        System.out.println("No students found.");
-//                    else {
-//                        for (Student s : students)
-//                            System.out.println(s);
-//                    }
-//                    break;
-//                case 13:
-//                    List<Senior> seniors = dbService.getAllSeniors();
-//                    if(seniors.isEmpty())
-//                        System.out.println("No seniors found.");
-//                    else {
-//                        for (Senior senior : seniors)
-//                            System.out.println(senior);
-//                    }
-//                    break;
-//
+
 
                 case 13:
                     // Exit
