@@ -62,16 +62,17 @@ public class DbService {
                 //p.close();
             }
 
-            String insertClientSQL = "INSERT INTO CLIENT (name, age, phone_number, insurance_id) VALUES (?, ?, ?, ?)";
+            String insertClientSQL = "INSERT INTO CLIENT (name, age, category, phone_number, insurance_id) VALUES (?, ?, ?, ?, ?)";
             p = connection.prepareStatement(insertClientSQL);
             p.setString(1, client.getName());
             p.setInt(2, client.getAge());
-            p.setString(3, client.getPhoneNumber());
+            p.setString(3, client.getCategory());
+            p.setString(4, client.getPhoneNumber());
 
             if (insuranceId != null) {
-                p.setLong(4, insuranceId);
+                p.setLong(5, insuranceId);
             } else {
-                p.setNull(4, Types.BIGINT);
+                p.setNull(5, Types.BIGINT);
             }
             p.executeUpdate();
             AuditService.logAction("CreateInsurance");
@@ -103,6 +104,7 @@ public class DbService {
         System.out.println("Client Information:");
         System.out.println("Name: " + client.getName());
         System.out.println("Age: " + client.getAge());
+        System.out.println("Category: " + client.getCategory());
         System.out.println("Phone Number: " + client.getPhoneNumber());
         AuditService.logAction("ReadClient");
 
@@ -116,7 +118,7 @@ public class DbService {
             AuditService.logAction("ReadInsurance");
 
         } else {
-            System.out.println("No insurance information.");
+            System.out.println("No insurance.");
         }
     }
 
@@ -137,6 +139,7 @@ public class DbService {
                 Long id = resultSet.getLong("id");
                 String name = resultSet.getString("name");
                 int age = resultSet.getInt("age");
+                String category = resultSet.getString("category");
                 String phoneNumber = resultSet.getString("phone_number");
 
                 Insurance insurance = null;
@@ -147,7 +150,7 @@ public class DbService {
                     insurance.setId(resultSet.getInt("INSURANCE_ID"));
                 }
 
-                Client client = new Client(name, age, phoneNumber, insurance);
+                Client client = new Client(name, age, category,  phoneNumber, insurance);
                 client.setId(id);
                 return client;
             }
@@ -171,6 +174,7 @@ public class DbService {
                 client.setId(resultSet.getLong("id"));
                 client.setName(resultSet.getString("name"));
                 client.setAge(resultSet.getInt("age"));
+                client.setCategory(resultSet.getString("category"));
                 client.setPhoneNumber(resultSet.getString("phone_number"));
 
                 Long insuranceId = resultSet.getLong("insurance_id");
@@ -228,41 +232,48 @@ public class DbService {
 
             Scanner scanner = new Scanner(System.in);
 
-            System.out.println("Enter new name (leave blank to keep current): ");
+            System.out.println("Enter new name (blank to keep current): ");
             String newName = scanner.nextLine();
             if (newName.isEmpty()) {
                 newName = client.getName();
             }
 
-            System.out.println("Enter new age (leave blank to keep current): ");
+            System.out.println("Enter new age (blank to keep current): ");
             String newAgeInput = scanner.nextLine();
             Integer newAge = newAgeInput.isEmpty() ? client.getAge() : Integer.parseInt(newAgeInput);
 
-            System.out.println("Enter new phone number (leave blank to keep current): ");
+            System.out.println("Enter new category (blank to keep current): ");
+            String newCategory = scanner.nextLine();
+            if (newCategory.isEmpty()) {
+                newCategory = client.getCategory();
+            }
+
+            System.out.println("Enter new phone number (blank to keep current): ");
             String newPhoneNumber = scanner.nextLine();
             if (newPhoneNumber.isEmpty()) {
                 newPhoneNumber = client.getPhoneNumber();
             }
 
-            String updateClientSQL = "UPDATE CLIENT SET NAME = ?, AGE = ?, PHONE_NUMBER = ? WHERE id = ?";
+            String updateClientSQL = "UPDATE CLIENT SET NAME = ?, AGE = ?, CATEGORY = ?, PHONE_NUMBER = ? WHERE id = ?";
             try (PreparedStatement updateClientStatement = connection.prepareStatement(updateClientSQL)) {
                 updateClientStatement.setString(1, newName);
                 updateClientStatement.setInt(2, newAge);
-                updateClientStatement.setString(3, newPhoneNumber);
-                updateClientStatement.setLong(4, client.getId());
+                updateClientStatement.setString(3, newCategory);
+                updateClientStatement.setString(4, newPhoneNumber);
+                updateClientStatement.setLong(5, client.getId());
                 updateClientStatement.executeUpdate();
                 System.out.println("Client information updated.");
             }
 
             Insurance insurance = client.getInsurance();
             if (insurance != null) {
-                System.out.println("Enter new insurance type (leave blank to keep current): ");
+                System.out.println("Enter new insurance type ( blank to keep current): ");
                 String newInsuranceType = scanner.nextLine();
                 if (newInsuranceType.isEmpty()) {
                     newInsuranceType = insurance.getType();
                 }
 
-                System.out.println("Enter new insurance expiration date (leave blank to keep current): ");
+                System.out.println("Enter new insurance expiration date ( blank to keep current): ");
                 String newInsuranceExpDate = scanner.nextLine();
                 if (newInsuranceExpDate.isEmpty()) {
                     newInsuranceExpDate = insurance.getExpDate();
@@ -329,7 +340,7 @@ public class DbService {
                         deleteInsuranceStatement.setLong(1, client.getInsurance().getId());
                         deleteInsuranceStatement.executeUpdate();
                         AuditService.logAction("DeleteInsurance");
-                        System.out.println("Insurance removed successfully.");
+                        //System.out.println("Insurance removed successfully.");
                     }
                 }
             }
@@ -369,9 +380,10 @@ public class DbService {
             while (resultSet.next()) {
                 String name = resultSet.getString("name");
                 int age = resultSet.getInt("age");
+                String category = resultSet.getString("category");
                 String phoneNumber = resultSet.getString("phone_number");
 
-                Client client = new Client(name, age, phoneNumber, null);
+                Client client = new Client(name, age, category, phoneNumber, null);
                 clients.add(client);
 
             }

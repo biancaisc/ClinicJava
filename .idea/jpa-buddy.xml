@@ -5,5 +5,7 @@
     <option name="renamerInitialized" value="true" />
     <option name="isSnapshotDb" value="false" />
     <option name="snapshotModelValue" value="Default" />
+    <option name="updateChangeLogPath" value="pom.xml" />
+    <option name="updateDbConnectionName" value="17afcfea-4600-44db-931e-b4d2a98de26c" />
   </component>
 </project>

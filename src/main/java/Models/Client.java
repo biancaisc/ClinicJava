@@ -19,6 +19,9 @@ public class Client {
     @Column(name = "AGE", nullable = false)
     private int age;
 
+    @Column(name = "CATEGORY", nullable = false)
+    private String category;
+
     @Column(name = "PHONE_NUMBER", nullable = false)
     private String phoneNumber;
 
@@ -34,9 +37,10 @@ public class Client {
 
     public Client() {}
 
-    public Client(String name, int age, String phoneNumber, Insurance insurance) {
+    public Client(String name, int age, String category, String phoneNumber, Insurance insurance) {
         this.name = name;
         this.age = age;
+        this.category = category;
         this.phoneNumber = phoneNumber;
         this.insurance = insurance;
     }
@@ -51,6 +55,7 @@ public class Client {
     public void setAge(int age){
         this.age = age;
     }
+    public void setCategory(String category){ this.category = category;}
     public void setName(String name){
         this.name = name;
     }
@@ -76,6 +81,7 @@ public class Client {
     public int getAge(){
         return age;
     }
+    public String getCategory(){return category;}
     public String getPhoneNumber(){
         return phoneNumber;
     }
@@ -88,7 +94,7 @@ public class Client {
     @Override
     public String toString() {
         String insuranceInfo = (insurance != null) ? ", Insurance: " + insurance.getType() + ", ExpDate: " + insurance.getExpDate() : "";
-        return "Client: " + name + ", age: "+ age + ", tel:" + phoneNumber + insuranceInfo;
+        return "Client: " + name + ", age: "+ age +", category: " + category +  ", tel:" + phoneNumber + insuranceInfo;
     }
 
 
