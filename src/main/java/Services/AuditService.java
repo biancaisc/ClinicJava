@@ -24,4 +24,5 @@ public class AuditService {
             System.err.println("Error writing to audit log: " + e.getMessage());
         }
     }
+
 }

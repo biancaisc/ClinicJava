@@ -37,6 +37,7 @@ public class Client {
 
     public Client() {}
 
+
     public Client(String name, int age, String category, String phoneNumber, Insurance insurance) {
         this.name = name;
         this.age = age;

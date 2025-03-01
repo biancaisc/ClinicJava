@@ -17,7 +17,6 @@ public class DbFunctions {
         } catch (Exception e){
             System.out.println(e.getMessage());
         }
-
         return connection;
     }
 }
